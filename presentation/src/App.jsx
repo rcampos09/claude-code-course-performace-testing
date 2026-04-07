@@ -54,21 +54,35 @@ export default function App() {
   return (
     <div className="presentation">
       {/* Logo */}
-      <motion.img
-        src="https://performance360latam.com/images/Perf360LogoBlack.png"
-        alt="Performance360"
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.3 }}
+      <motion.div
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ delay: 0.2 }}
         style={{
           position: 'fixed',
-          top: '1.5rem',
+          top: '1.25rem',
           left: '1.5rem',
-          height: 32,
-          objectFit: 'contain',
           zIndex: 100,
+          display: 'flex',
+          alignItems: 'center',
+          gap: '0.75rem',
+          background: 'rgba(255,255,255,0.5)',
+          backdropFilter: 'blur(8px)',
+          padding: '0.5rem 1rem',
+          borderRadius: '999px',
+          border: '1px solid rgba(16,185,129,0.1)',
+          boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
         }}
-      />
+      >
+        <img
+          src="https://performance360latam.com/images/Perf360LogoBlack.png"
+          alt="Performance360"
+          style={{
+            height: 42,
+            objectFit: 'contain',
+          }}
+        />
+      </motion.div>
 
       {/* Language toggle */}
       <div className="lang-toggle">
