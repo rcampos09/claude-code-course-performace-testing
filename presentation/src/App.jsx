@@ -4,13 +4,13 @@ import { t as translations } from './translations'
 import {
   S01Hero, S02Pain, S03Target, S04Claude, S05Perf, S06Flow,
   S07Lab, S08MCP, S09Skills, S10Transform, S11Modules,
-  S12Project, S13Requirements, S14Instructor,
+  S12Project, S13Requirements, S14Instructor, S15Team,
 } from './slides/index'
 
 const SLIDES = [
   S01Hero, S02Pain, S03Target, S04Claude, S05Perf, S06Flow,
   S07Lab, S08MCP, S09Skills, S10Transform, S11Modules,
-  S12Project, S13Requirements, S14Instructor,
+  S12Project, S13Requirements, S14Instructor, S15Team,
 ]
 
 const slideVariants = {
@@ -53,6 +53,23 @@ export default function App() {
 
   return (
     <div className="presentation">
+      {/* Logo */}
+      <motion.img
+        src="https://performance360latam.com/images/Perf360LogoBlack.png"
+        alt="Performance360"
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.3 }}
+        style={{
+          position: 'fixed',
+          top: '1.5rem',
+          left: '1.5rem',
+          height: 32,
+          objectFit: 'contain',
+          zIndex: 100,
+        }}
+      />
+
       {/* Language toggle */}
       <div className="lang-toggle">
         {['es', 'en'].map(l => (

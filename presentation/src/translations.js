@@ -230,16 +230,36 @@ export const t = {
     },
     // S14
     instructor: {
-      label: 'Tu Instructor',
-      title: 'Rodrigo Campos',
-      role: 'Performance Engineer · AI Tooling',
-      bio: 'Diseñé este curso construyendo primero las herramientas que los alumnos van a usar. No es un curso teórico — es el flujo de trabajo que yo mismo uso.',
-      built: [
-        { icon: '⚡', text: 'Skills: performance-testing-strategy, k6-best-practices, performance-report-analysis' },
-        { icon: '🏪', text: 'Laboratorio: Poleras Store con stack LGTM y OpenTelemetry completo' },
-        { icon: '📁', text: 'Proyecto de referencia: k6-practice-load integrado con JIRA y Grafana MCP' },
+      label: 'Tus Instructores',
+      title: 'Especialistas en Performance Testing & IA',
+      subtitle: 'Un equipo de especialistas de Performance360, construyendo el futuro del testing.',
+      team: [
+        {
+          name: 'Rodrigo Campos',
+          role: 'Performance Engineer · AI Tooling',
+          image: 'https://performance360latam.com/images/rodrigo-campos.png',
+          bio: 'Especialista en Claude Code. Construyó los Skills y MCPs de este curso.',
+        },
+        {
+          name: 'John Osorio',
+          role: 'Performance Testing Lead',
+          image: 'https://performance360latam.com/images/john-osorio.jpeg',
+          bio: 'Experto en k6 y Gatling. Instructor principal de estrategia de testing.',
+        },
+        {
+          name: 'Carlos Quiroz',
+          role: 'Observability Engineer',
+          image: 'https://performance360latam.com/images/carlos-quiroz.jpeg',
+          bio: 'Especialista en Grafana y OpenTelemetry. Experto en métricas y trazas.',
+        },
+        {
+          name: 'Oscar Díaz',
+          role: 'DevOps & Infrastructure',
+          image: 'https://performance360latam.com/images/oscar-diaz.png',
+          bio: 'Experto en Docker y Kubernetes. Arquitecto del ambiente del lab.',
+        },
       ],
-      quote: '"El tester que aprende a trabajar con IA no pierde su trabajo. Se vuelve 10x más valioso."',
+      quote: 'Enseñamos el mismo flujo que usamos en producción. Sin teoría — solo práctica.',
     },
   },
 
@@ -460,16 +480,36 @@ export const t = {
       note: 'No prior experience in performance testing or AI required.',
     },
     instructor: {
-      label: 'Your Instructor',
-      title: 'Rodrigo Campos',
-      role: 'Performance Engineer · AI Tooling',
-      bio: 'I designed this course by first building the tools that students will use. This is not a theoretical course — it is the workflow I use myself.',
-      built: [
-        { icon: '⚡', text: 'Skills: performance-testing-strategy, k6-best-practices, performance-report-analysis' },
-        { icon: '🏪', text: 'Lab: Poleras Store with full LGTM stack and OpenTelemetry' },
-        { icon: '📁', text: 'Reference project: k6-practice-load integrated with JIRA and Grafana MCP' },
+      label: 'Your Instructors',
+      title: 'Experts in Performance Testing & AI',
+      subtitle: 'A team of specialists from Performance360, building the future of testing.',
+      team: [
+        {
+          name: 'Rodrigo Campos',
+          role: 'Performance Engineer · AI Tooling',
+          image: 'https://performance360latam.com/images/rodrigo-campos.png',
+          bio: 'Claude Code specialist. Built the Skills and MCPs for this course.',
+        },
+        {
+          name: 'John Osorio',
+          role: 'Performance Testing Lead',
+          image: 'https://performance360latam.com/images/john-osorio.jpeg',
+          bio: 'k6 and Gatling expert. Lead instructor for testing strategy.',
+        },
+        {
+          name: 'Carlos Quiroz',
+          role: 'Observability Engineer',
+          image: 'https://performance360latam.com/images/carlos-quiroz.jpeg',
+          bio: 'Grafana and OpenTelemetry specialist. Expert in metrics & traces.',
+        },
+        {
+          name: 'Oscar Díaz',
+          role: 'DevOps & Infrastructure',
+          image: 'https://performance360latam.com/images/oscar-diaz.png',
+          bio: 'Docker and Kubernetes expert. Lab environment architect.',
+        },
       ],
-      quote: '"The tester who learns to work with AI does not lose their job. They become 10x more valuable."',
+      quote: 'We teach the same workflow we use in production. No theory — just practice.',
     },
   },
 }

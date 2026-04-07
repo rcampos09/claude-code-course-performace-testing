@@ -8,8 +8,8 @@ export default function S01Hero({ tr }) {
   return (
     <div className="slide" style={{ textAlign: 'center' }}>
       <div className="bg-grid" />
-      <div className="bg-glow" style={{ width: 600, height: 600, background: 'radial-gradient(circle, rgba(245,158,11,0.15) 0%, transparent 70%)', top: '50%', left: '50%', transform: 'translate(-50%,-50%)' }} />
-      <div className="bg-glow" style={{ width: 400, height: 400, background: 'radial-gradient(circle, rgba(124,58,237,0.1) 0%, transparent 70%)', top: '20%', right: '10%' }} />
+      <div className="bg-glow" style={{ width: 600, height: 600, background: 'radial-gradient(circle, rgba(16,185,129,0.1) 0%, transparent 70%)', top: '50%', left: '50%', transform: 'translate(-50%,-50%)' }} />
+      <div className="bg-glow" style={{ width: 400, height: 400, background: 'radial-gradient(circle, rgba(245,158,11,0.08) 0%, transparent 70%)', top: '20%', right: '10%' }} />
 
       <motion.div variants={container} initial="hidden" animate="show" style={{ maxWidth: 800, zIndex: 1 }}>
         <motion.div variants={item}>
@@ -27,9 +27,9 @@ export default function S01Hero({ tr }) {
         </motion.p>
 
         <motion.div variants={item} style={{ display: 'flex', gap: '0.75rem', justifyContent: 'center', flexWrap: 'wrap', marginBottom: '3rem' }}>
-          <span className="badge badge-primary">{t.tag1}</span>
-          <span className="badge badge-violet">{t.tag2}</span>
-          <span className="badge badge-green">{t.tag3}</span>
+          <span className="badge badge-green">{t.tag1}</span>
+          <span className="badge badge-orange">{t.tag2}</span>
+          <span className="badge badge-red">{t.tag3}</span>
         </motion.div>
 
         <motion.p variants={item} style={{ fontSize: '0.8rem', color: 'var(--dim)', fontFamily: 'var(--mono)' }}>
