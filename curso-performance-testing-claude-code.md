@@ -1,5 +1,5 @@
 # Claude Code for Performance Tester
-### Guía Clase a Clase — Borrador v0.2
+### Guía Clase a Clase — Borrador v0.3
 
 > **Audiencia:** QA/QE con conocimiento básico de testing funcional.
 > No se requiere experiencia previa en performance testing ni en IA.
@@ -25,7 +25,9 @@ Módulo 2 → Claude Code: Configuración y CLAUDE.md como constitución del pro
 Módulo 3 → JIRA como fuente de la verdad + MCPs (Atlassian + Grafana)
 Módulo 4 → Estrategia de Testing desde un ticket (Skill: performance-testing-strategy)
 Módulo 5 → Desarrollo de Scripts con k6 (Skill: k6-best-practices)
-Módulo 6 → Ejecución + Observabilidad con MCP Grafana
+           └─ Alternativas opcionales: Locust (skill: locust-best-practices)
+                                       Gatling (skill: gatling-best-practices)
+Módulo 6 → Ejecución + Navegar Observabilidad (Grafana: logs, trazas, métricas)
 Módulo 7 → Reportes Bimodales → comentar en JIRA (Skill: performance-report-analysis)
 Módulo 8 → Proyecto Final: Sprint de Performance Completo
 ```
@@ -271,37 +273,77 @@ Claude → llama Grafana MCP → consulta PromQL → obtiene P95, error rate →
 }
 ```
 
-### Clase 3-B: MCP Atlassian — JIRA como fuente de la verdad
+### Clase 3-B: Setup del JIRA personal del alumno
 
-**Los tickets JIRA DEL CURSO (proyecto DEV — Poleras Store):**
+Cada alumno trabaja con su **propio board de JIRA** usando la capa gratuita de Atlassian.
+Esto replica el flujo real de trabajo: cada tester conecta su proyecto personal a Claude Code.
 
-| Ticket | Servicio | Endpoint | SLA P95 | Error Rate | VUs |
-|--------|----------|----------|---------|------------|-----|
-| DEV-19 | auth | POST /api/auth/login | < 450ms | < 0.5% | 10 |
-| DEV-20 | products | GET /api/products | < 300ms | < 0.5% | 15 |
-| DEV-21 | cart | POST/GET /api/cart | < 300ms | < 1% | 10 |
-| DEV-22 | orders | POST /api/orders | < 500ms | < 0.5% | 8 |
-| DEV-23 | payments | POST /api/payments | < 800ms | < 0.1% | 5 |
-| DEV-24 | e2e | Flujo completo | todos | todos | 10 |
+**Paso 1 — Crear cuenta y proyecto JIRA (5 minutos)**
+- Ir a https://www.atlassian.com/software/jira/free
+- Crear cuenta gratuita y un nuevo proyecto tipo "Scrum"
+- Nombrar el proyecto: `PERF` (o el prefijo que el alumno prefiera)
 
-**Práctica — leer un ticket:**
+**Paso 2 — Crear la estructura del proyecto vía Claude Code**
+
+En lugar de crear los tickets manualmente, el alumno le pide a Claude que lo haga:
+
 ```
-"Claude, lee el ticket JIRA DEV-22 y extrae:
-- El endpoint a testear
-- Los SLAs definidos (P95 y error rate)
-- El perfil de carga (VUs y duración)
-- Los criterios de aceptación"
+"Tengo un proyecto JIRA vacío llamado PERF. Voy a hacer performance
+testing del e-commerce Poleras Store que tiene 5 microservicios:
+auth (:3001), products (:3002), cart (:3003), orders (:3004), payments (:3005).
+
+Crea en JIRA los tickets de performance testing para cada servicio
+con los SLAs apropiados para cada uno, incluyendo el flujo e2e.
+Usa los siguientes criterios técnicos como base:
+- auth:     P95 < 450ms, error rate < 0.5%, 10 VUs
+- products: P95 < 300ms, error rate < 0.5%, 15 VUs
+- cart:     P95 < 300ms, error rate < 1%,   10 VUs
+- orders:   P95 < 500ms, error rate < 0.5%,  8 VUs
+- payments: P95 < 800ms, error rate < 0.1%,  5 VUs
+- e2e:      todos los SLAs anteriores,       10 VUs"
 ```
 
-Claude usa el MCP de Atlassian para obtener esta información directamente del ticket.
+Claude usa el MCP Atlassian para crear todos los tickets directamente.
+El alumno termina con 6 tickets listos en su board personal.
+
+**Por qué esto importa:**
+El alumno aprende que Claude Code no solo consume datos del sistema de gestión —
+también puede **construir la estructura de trabajo** a partir de requisitos técnicos.
+Esta habilidad se transfiere directamente al trabajo real.
+
+**Paso 3 — Conectar el MCP al proyecto personal**
+
+```json
+// .mcp.json del alumno (reemplaza CLOUD_ID con el suyo)
+{
+  "mcpServers": {
+    "atlassian": {
+      "type": "http",
+      "url": "https://mcp.atlassian.com/v1/mcp",
+      "headers": {
+        "Authorization": "Bearer ${JIRA_API_TOKEN}"
+      }
+    }
+  }
+}
+```
+
+El Cloud ID y API Token se obtienen desde https://id.atlassian.com/manage-profile/security/api-tokens
+
+**Práctica — leer el primer ticket creado:**
+```
+"Claude, lee el ticket PERF-1 (auth service) de mi JIRA y
+extrae los SLAs, el perfil de carga y los criterios de aceptación
+que vamos a usar para diseñar el test."
+```
 
 **Smart Commits — cerrar el ciclo:**
-Cuando Claude genera el commit, incluye referencias al ticket:
+Cuando Claude genera el commit, incluye referencias al ticket del alumno:
 ```bash
-git commit -m "test(orders): load test DEV-22 - P95 450ms PASS
+git commit -m "test(auth): smoke + load test PERF-1 - P95 380ms PASS
 
-DEV-22 #comment Load test passed. P95: 380ms (SLA: 500ms). Error rate: 0.1%
-DEV-22 #done"
+PERF-1 #comment Load test passed. P95: 380ms (SLA: 450ms). Error rate: 0.1%
+PERF-1 #done"
 ```
 
 ### Clase 3-C: MCP Grafana — métricas en tiempo real desde Claude Code
@@ -500,7 +542,7 @@ k6 run --env BASE_URL=http://localhost:3004 \
        --env SCENARIO=smoke \
        tests/orders/orders.test.js
 
-# Load Test (validar SLA de DEV-22)
+# Load Test (validar SLA del ticket JIRA)
 k6 run --env BASE_URL=http://localhost:3004 \
        --env SCENARIO=load \
        --out json=results/$(date +%Y-%m-%d)_load_orders/raw.json \
@@ -511,111 +553,242 @@ k6 run --env BASE_URL=http://localhost:3004 \
 
 ---
 
-## Módulo 6 — Ejecución + Observabilidad con MCP Grafana
-**Objetivo:** El alumno interpreta Prometheus, Tempo y Loki para diagnosticar cuellos de botella durante y después de un test.
+### Alternativas opcionales al final del módulo
 
-### Clase 6-A: El triángulo de observabilidad
+> **Nota para el alumno:** el curso está enfocado en k6, que es la herramienta del laboratorio.
+> Si tu stack tecnológico actual usa Locust o Gatling, los Skills del curso te cubren.
+> No necesitas aprender k6 para sacar valor del curso — el flujo de trabajo es idéntico.
+
+**Si tu equipo usa Python → Locust (Skill: `locust-best-practices`)**
+```
+"Tengo el mismo plan de testing para el endpoint /api/orders.
+Genera el script en Locust (Python) con el mismo perfil de carga
+y los mismos SLAs."
+```
+El Skill genera el patrón de 4 bloques: imports/config, HttpUser class, CustomLoadShape, CLI command.
+
+**Si tu equipo usa Java/Kotlin → Gatling (Skill: `gatling-best-practices`)**
+```
+"Genera el mismo test en Gatling (Java). Usa el patrón de 5 bloques:
+Protocol, Feeders, Scenario, Injection Profile, Assertions."
+```
+
+**Tabla de decisión rápida:**
+
+| Si tu equipo usa... | Herramienta | Skill disponible |
+|---------------------|-------------|-----------------|
+| JavaScript/TypeScript | k6 | `k6-best-practices` |
+| Python | Locust | `locust-best-practices` |
+| Java / Kotlin / Scala | Gatling | `gatling-best-practices` |
+
+El flujo posterior (Módulos 6, 7, 8) es idéntico independientemente de la herramienta.
+
+---
+
+## Módulo 6 — Navegando la Observabilidad durante y después del Test
+**Objetivo:** El alumno sabe exactamente dónde mirar en Grafana antes, durante y después de un test.
+No aprende a crear dashboards — en la industria los dashboards ya existen.
+Lo que el tester necesita saber es **cómo navegarlos y qué le están diciendo**.
+
+> **Contexto real:** La mayoría de las empresas ya tienen Grafana con dashboards de sus servicios.
+> Tu trabajo como tester no es construir observabilidad — es saber leerla.
+> Claude Code + MCP Grafana te dan la capacidad de hacer preguntas sobre esos dashboards
+> sin necesidad de saber PromQL o LogQL de memoria.
+
+### Clase 6-A: El triángulo de observabilidad — la brújula del tester
 
 ```
-        MÉTRICAS (Prometheus/Grafana)
+        MÉTRICAS (Prometheus → Grafana)
         "¿Qué está pasando en números?"
+        Cuándo: durante y después del test
              /              \
             /                \
-    TRAZAS (Tempo)    LOGS (Loki)
-    "¿Dónde está       "¿Qué dijo
-     el tiempo?"        el sistema?"
+    TRAZAS (Tempo)        LOGS (Loki)
+    "¿Dónde está          "¿Qué dijo
+     el tiempo?"           el sistema?"
+    Cuándo: al             Cuándo: cuando
+    investigar             hay errores
+    latencia alta
 ```
 
 Los tres se correlacionan vía **TraceID** — esa es la ventaja de OpenTelemetry.
+Un log tiene el traceId. Una traza tiene el traceId. Una métrica tiene el timestamp.
+Con los tres puedes reconstruir exactamente qué pasó durante el pico de carga.
 
-### Clase 6-B: Prometheus + Grafana — ¿qué mirar durante el test?
-
-**Dashboard RED Metrics (dashboard ID: ecommerce-apm-v1):**
-
-Los 4 paneles críticos durante un load test:
-1. **Request Rate** — ¿el sistema recibe el tráfico que k6 está enviando?
-2. **Error Rate** — ¿aparecen errores 5xx al crecer la carga?
-3. **P95 Latency** — ¿se mantiene bajo el umbral del SLA?
-4. **DB Connection Pool** — ¿se está agotando antes que la CPU?
-
-**Práctica con MCP Grafana:**
+**El flujo de investigación del tester:**
 ```
-"Durante el load test de orders que ejecuté hace 10 minutos,
-consulta el P95 de POST /api/orders y el uso del connection pool
-de orders-db. ¿En qué momento (si alguno) empezó la degradación?"
+1. Grafana RED dashboard → veo que P95 sube o error rate sube
+                ↓
+2. ¿Error rate > 0? → Loki → busco los mensajes de error
+                ↓
+3. ¿Latencia alta? → Tempo → busco la traza más lenta
+                ↓
+4. Tengo evidencia → Claude analiza y diagnostica la causa raíz
 ```
 
-Claude ejecuta:
-```promql
-# P95 orders endpoint
-histogram_quantile(0.95,
-  rate(http_request_duration_seconds_bucket{
-    service="orders-service",
-    method="POST",
-    route="/api/orders"
-  }[5m])
-)
+### Clase 6-B: Antes del test — validar que el ambiente está sano
 
-# DB connection pool
-pg_stat_activity_count{datname="orders_db"} /
-pg_settings_max_connections{datname="orders_db"}
+**No ejecutes el test si el ambiente ya está degradado.**
+Antes de cada ejecución, 2 minutos en Grafana:
+
+```
+Grafana → Dashboards → RED Metrics (ecommerce-apm-v1)
+
+Verificar:
+✓ Error rate en 0% (ningún servicio tiene errores en reposo)
+✓ Latencia de baseline < 100ms en todos los servicios
+✓ DB connection pool < 30% de ocupación
+✓ Todos los contenedores en estado healthy
 ```
 
-### Clase 6-C: Tempo — encontrar el span más lento
+**Con MCP Grafana desde Claude Code:**
+```
+"Antes de ejecutar el load test de orders, verifica el estado
+de salud de todos los servicios del e-commerce en Grafana.
+¿Hay algún servicio con errores o latencia elevada en este momento?"
+```
 
-**Flujo de diagnóstico:**
-1. En Grafana, filter por P99 latency del endpoint con mayor degradación
-2. Abre una traza del período de mayor latencia
-3. Identifica el span padre (HTTP handler) y los spans hijos
-4. Pregunta: ¿cuál span consume el 80%+ del tiempo total?
+### Clase 6-C: Durante el test — 4 paneles que importan
 
-**Patrones comunes:**
+Abre el dashboard RED Metrics **antes de ejecutar k6** y mantén la vista durante todo el test.
+
+**Los 4 paneles que el tester mira en tiempo real:**
+
+```
+┌─────────────────────┬─────────────────────┐
+│  1. Request Rate    │  2. Error Rate       │
+│  "¿Llegó el         │  "¿Hay errores 5xx?" │
+│   tráfico?"         │                      │
+│                     │  🔴 si sube → STOP   │
+│  debe subir con k6  │  ✅ < umbral del SLA │
+├─────────────────────┼─────────────────────┤
+│  3. P95 Latency     │  4. DB Pool Usage    │
+│  "¿Cumple el SLA?"  │  "¿Se va a agotar?" │
+│                     │                      │
+│  🔴 si supera SLA   │  ⚠️  si > 70%       │
+│  ✅ bajo la línea   │  🔴 si > 90%        │
+└─────────────────────┴─────────────────────┘
+```
+
+**Señal de pausa:** Si el error rate supera el doble del SLA antes de terminar el test,
+detén la ejecución y diagnostica antes de continuar. Un test corriendo sobre un sistema
+ya degradado no genera datos útiles.
+
+```bash
+# Detener k6 manualmente si ves degradación grave
+Ctrl + C  →  k6 genera el reporte parcial de todos modos
+```
+
+### Clase 6-D: Después del test — navegar Tempo para encontrar el cuello de botella
+
+> **Regla del 80/20:** El 80% de la latencia total normalmente viene de un único span.
+> Tu trabajo es encontrar ese span.
+
+**Cómo navegar a una traza lenta en Grafana:**
+
+```
+Grafana → Explore → Datasource: Tempo
+
+TraceQL (el lenguaje de búsqueda):
+{ .http.route = "/api/orders" && duration > 400ms }
+
+Esto devuelve trazas del endpoint /api/orders que tardaron más de 400ms.
+```
+
+**Leer una traza — lo que verás:**
 ```
 orders-service [480ms total]
-  ├── auth validation    [12ms]   ← normal
-  ├── db: INSERT orders  [420ms]  ← AQUÍ está el problema
-  │     └── db: SELECT inventory  [380ms]  ← query sin índice
-  └── emit event         [8ms]   ← normal
+  ├── middleware: auth validation    [12ms]   ← normal, < 5% del total
+  ├── db: INSERT INTO orders         [420ms]  ← 87% del tiempo total ← AQUÍ
+  │     └── db: SELECT FROM inventory [380ms] ← query sin índice
+  └── event: order.created           [8ms]   ← normal
 ```
 
-**Práctica:**
+**Pregunta a hacerse:** ¿El span más largo es una query de DB, una llamada HTTP externa, o procesamiento de la app?
+La respuesta determina dónde debe ir el fix.
+
+**Con MCP Grafana:**
 ```
-"Abre la traza más lenta del endpoint /api/orders en los últimos
-30 minutos y dime en qué span está el 80% del tiempo total."
-```
-
-### Clase 6-D: Loki — correlacionar logs con el trace
-
-Con OpenTelemetry, cada log incluye el `traceId`. Desde Grafana → Explore → Loki:
-
-```logql
-# Buscar errores del servicio de orders en el período del test
-{service="orders-service"} |= "ERROR" | json | level="ERROR"
-
-# Correlacionar un error específico con su traza
-{service="orders-service"} | json | traceId="abc123..."
+"Ejecuta una query en Tempo para encontrar las 5 trazas más lentas
+del endpoint POST /api/orders en los últimos 30 minutos.
+Para la traza más lenta, dime cuál span tiene el mayor tiempo
+y qué porcentaje del tiempo total representa."
 ```
 
-**Práctica:**
+### Clase 6-E: Después del test — Loki para investigar errores
+
+> **Solo vas a Loki cuando hay errores.**
+> Si el error rate fue 0, Loki no te dice nada útil sobre performance.
+> Si hay errores, Loki te dice exactamente qué mensaje generó cada uno.
+
+**Navegar Loki en Grafana:**
 ```
-"Busca en Loki los errores del orders-service durante el stress test
-de hace 20 minutos. Para el error más frecuente, dame el traceId
-y ábrelo en Tempo."
+Grafana → Explore → Datasource: Loki
+
+LogQL básico para el tester:
+{service="orders-service"} | json | level="ERROR"
+
+Agregar rango de tiempo al período del test para reducir el ruido.
 ```
 
-**El checklist de diagnóstico (9 patrones):**
+**El poder de la correlación TraceID:**
+Cada error en Loki incluye el `traceId`. Al hacer clic en ese campo en Grafana,
+abre directamente la traza en Tempo. En un solo clic: del mensaje de error → a la traza completa.
 
-| Patrón | Señal en Grafana | Señal en Tempo | Señal en Loki |
-|--------|-----------------|----------------|---------------|
-| DB connection pool exhaustion | Pool > 95%, latencia crece bruscamente | Spans DB > 500ms | `connection refused`, `pool timeout` |
-| Memory leak | Latencia crece monotónicamente | Spans GC > 100ms | `heap size`, `OOM` |
-| CPU saturation | CPU > 90% | Spans de processing largas | — |
-| Thread pool exhaustion | Error rate sube, CPU baja | Timeouts en spans | `thread rejected`, `queue full` |
-| N+1 query | Latencia crece con carga lineal | Muchos spans DB cortos | queries repetidas |
-| Cold start | Spike de latencia al inicio | Setup spans lentos | `initializing` |
-| Event loop blocking | Latencia alta, CPU normal | Un solo span largo | `event loop delay` |
-| Cascading failure | Error rate en cadena | Spans downstream fallando | `circuit breaker open` |
-| Network I/O | Latencia irregular | Spans de red variables | `ECONNRESET` |
+```
+Log entry:
+{
+  "level": "ERROR",
+  "message": "connection pool exhausted",
+  "service": "orders-service",
+  "traceId": "abc123def456",    ← clic aquí → abre en Tempo
+  "timestamp": "2026-04-01T10:23:45Z"
+}
+```
+
+**Con MCP Grafana:**
+```
+"Busca en Loki los errores del orders-service entre las 10:20 y
+las 10:45 de hoy (durante el stress test). ¿Cuál fue el error
+más frecuente y qué traceId tiene?"
+```
+
+### Clase 6-F: La combinación ganadora — Claude analiza todo junto
+
+El valor real no está en saber navegar Grafana manualmente —
+está en darle ese contexto a Claude Code para que haga el diagnóstico.
+
+**Prompt de análisis integrado:**
+```
+"Acabo de ejecutar el load test del servicio de orders (PERF-4).
+Tengo los resultados de k6 en results/2026-04-01_load_orders/raw.json.
+
+Usa el MCP de Grafana para:
+1. Obtener el P95 del endpoint /api/orders en los últimos 30 min
+2. Verificar si el DB connection pool tuvo picos de uso
+3. Buscar errores en Loki del orders-service en ese período
+4. Si hay errores, obtener el traceId del más frecuente y abrirlo en Tempo
+
+Con toda esa información, dime cuál es la causa raíz del problema
+más crítico y qué recomendarías corregir primero."
+```
+
+Claude hace las 4 queries en paralelo usando MCP Grafana y sintetiza el diagnóstico.
+El tester lee el diagnóstico, valida con su criterio, y decide si acepta la recomendación.
+
+**El checklist de diagnóstico — 9 patrones que verás en el laboratorio:**
+
+| Patrón | Señal en Grafana (métricas) | Dónde buscarlo | Síntoma típico en Loki |
+|--------|-----------------------------|----------------|------------------------|
+| DB connection pool exhaustion | Pool > 90%, latencia crece de golpe | Tempo: spans DB > 400ms | `pool timeout`, `connection refused` |
+| Memory leak | Latencia crece lentamente y no baja | Tempo: spans GC periódicos | `heap size increasing`, `OOM` |
+| N+1 query | Latencia escala linealmente con VUs | Tempo: muchos spans DB cortos | queries repetidas con mismos params |
+| CPU saturation | CPU > 90%, latencia alta y uniforme | Tempo: todos los spans lentos | — |
+| Cold start | Spike al inicio, luego se normaliza | Tempo: span de setup largo | `initializing`, `warming up` |
+| Event loop blocking | Latencia alta, CPU < 40% | Tempo: un único span largo | `event loop delay` |
+| Cascading failure | Error rate en cadena de servicios | Tempo: spans downstream en rojo | `circuit breaker open`, `upstream timeout` |
+| Thread pool exhaustion | Error rate sube, CPU baja | Tempo: timeouts antes de empezar | `thread rejected`, `queue full` |
+| Network I/O | Latencia irregular, no consistente | Tempo: spans de red variables | `ECONNRESET`, `socket hang up` |
 
 ---
 
@@ -848,31 +1021,38 @@ Decisión: GO / NO-GO / CONDITIONAL GO
 
 ---
 
-## Notas para Refinar
+## Decisiones de diseño tomadas (v0.3)
 
-### Decisiones pendientes
-- [ ] Definir duración exacta por clase (propuesta: 90 min = 30 teoría + 60 práctica)
-- [ ] ¿El curso es sincrónico, asincrónico o mixto?
-- [ ] ¿Los alumnos traen su propio JIRA o usamos un board compartido del curso?
-- [ ] Definir si el módulo 5 incluye Gatling/Locust como alternativas o se enfoca solo en k6
-
-### Mejoras al laboratorio
-- [ ] Verificar que todos los endpoints del flujo e2e están documentados en el README
-- [ ] Agregar datos de prueba realistas (usuarios, cards, products) precargados en el lab
-- [ ] Crear un dashboard de Grafana específico para los tests del curso (con anotaciones de k6)
-- [ ] Documentar cómo resetear la base de datos entre pruebas (teardown de estado)
-
-### Contenido adicional a evaluar
-- [ ] Módulo bonus: CI/CD — ejecutar k6 en GitHub Actions y comentar resultados en JIRA automáticamente
-- [ ] Módulo bonus: Comparación de runs — detectar regresiones de performance entre versiones
-- [ ] Ejercicio de debugging: introducir un bug de performance deliberado (N+1 query) para que los alumnos lo diagnostiquen
-
-### Gaps identificados en el curso actual
-- El módulo 6 (observabilidad) es el más denso — considerar dividirlo en dos clases
-- Falta un ejercicio de "reverse engineering": dado un reporte, ¿qué test lo generó?
-- Los Smart Commits merecen una práctica dedicada — muchos QAs no están familiarizados con git
+| Decisión | Resolución |
+|----------|------------|
+| Duración de clase | 90 min = ~30 min teoría + ~60 min práctica guiada |
+| Herramienta principal | k6 (100% del flujo del curso) |
+| Alternativas | Locust y Gatling son opcionales vía Skills al final del módulo 5 |
+| JIRA | Cada alumno crea su propio board gratuito; Claude lo estructura vía MCP |
+| Observabilidad | Navegación y análisis, no creación de dashboards |
+| MCP Grafana | Se usa para análisis post-test y durante el módulo 7 (reportes) |
 
 ---
 
-*Borrador v0.2 — Rodrigo Campos — 2026-04-01*
-*Revisado con contexto real del laboratorio y del proyecto k6-practice-load*
+## Notas para Refinar
+
+### Mejoras al laboratorio
+- [ ] Verificar que el README del lab documenta todos los endpoints del flujo e2e completo
+- [ ] Agregar script de seed de datos (usuarios, cards, products) para el lab inicial
+- [ ] Documentar el procedimiento de reset de BD entre pruebas (para no contaminar resultados)
+- [ ] Validar que el lab tiene anotaciones de Grafana configuradas para marcar el inicio/fin de los tests de k6
+
+### Contenido adicional a evaluar
+- [ ] Módulo bonus: CI/CD — k6 en GitHub Actions + comentar resultados en JIRA automáticamente
+- [ ] Módulo bonus: Comparación de runs — detectar regresiones entre versiones (delta de P95)
+- [ ] Ejercicio de debugging: introducir un N+1 query deliberado para que los alumnos lo diagnostiquen con Tempo
+
+### Gaps pendientes
+- [ ] Los Smart Commits requieren práctica adicional — muchos QAs no están familiarizados con git workflow
+- [ ] Agregar ejercicio de "reverse engineering": dado un reporte con findings, reproducir el test que lo generó
+- [ ] Documentar el flujo de configuración del JIRA MCP paso a paso (Cloud ID + API Token + .env)
+
+---
+
+*Borrador v0.3 — Rodrigo Campos — 2026-04-01*
+*Decisiones incorporadas: k6 primario + Locust/Gatling opcionales, JIRA personal por alumno, observabilidad como navegación*
