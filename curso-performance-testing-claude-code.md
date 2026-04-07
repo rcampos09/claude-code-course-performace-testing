@@ -1,5 +1,5 @@
 # Claude Code for Performance Tester
-### Guía Clase a Clase — Borrador v0.3
+### Guía Clase a Clase — Borrador v0.4
 
 > **Audiencia:** QA/QE con conocimiento básico de testing funcional.
 > No se requiere experiencia previa en performance testing ni en IA.
@@ -75,7 +75,26 @@ Tickets JIRA:            DEV-19 (auth) · DEV-20 (products) · DEV-21 (cart)
 ## Módulo 1 — El Problema y el Stack
 **Objetivo:** El alumno entiende por qué el performance testing falla en la industria y levanta el laboratorio completo.
 
+### Competencias del módulo
+Al completar este módulo serás capaz de:
+- Distinguir los 5 tipos de prueba de performance y justificar cuándo usar cada uno
+- Explicar la cadena SLI → SLO → SLA con ejemplos concretos de negocio
+- Levantar el laboratorio completo (5 servicios + observabilidad) y verificar su estado
+- Hacer tu primera interacción productiva con Claude Code sobre el proyecto
+
+### Rúbrica de evaluación
+
+| Nivel | Criterio |
+|-------|----------|
+| **Básico** | El laboratorio corre y puedes acceder a Grafana con los 4 dashboards disponibles |
+| **Competente** | Puedes explicar los 5 tipos de prueba y cuándo aplica cada uno dado un escenario de negocio |
+| **Avanzado** | Puedes identificar qué tipo de prueba faltó en un incidente real y por qué lo habría prevenido |
+
+---
+
 ### Clase 1-A: El gap de los equipos de QA modernos
+> **Al terminar esta clase podrás:** Explicar el ciclo completo de performance testing y traducir métricas técnicas (P95, RPS, error rate) al lenguaje de negocio (SLA, impacto de usuario).
+
 **El problema real:**
 - Los testers saben que el performance importa, pero el ciclo completo (estrategia → script → ejecución → reporte) consume días
 - Los reportes técnicos no llegan a product managers porque están llenos de percentiles
@@ -95,6 +114,7 @@ DESPUÉS (con IA): JIRA ticket → Claude Code → scripts en horas → reporte 
 - La diferencia entre un número y una decisión de negocio
 
 ### Clase 1-B: Levantar el laboratorio (Poleras Store)
+> **Al terminar esta clase podrás:** Levantar el stack completo con Docker, verificar los 5 servicios y hacer tu primera consulta a Claude Code sobre la arquitectura del sistema.
 
 **Pre-requisitos del alumno:**
 - Docker Desktop instalado
@@ -141,7 +161,25 @@ El alumno aprende: Claude Code puede leer archivos del proyecto y construir cont
 ## Módulo 2 — Claude Code: CLAUDE.md como Constitución del Proyecto
 **Objetivo:** El alumno configura Claude Code correctamente y entiende que el CLAUDE.md es el documento más importante del proyecto de testing.
 
+### Competencias del módulo
+Al completar este módulo serás capaz de:
+- Instalar Claude Code y los 3 Skills del curso en cualquier proyecto
+- Escribir un CLAUDE.md que defina el flujo de trabajo, las convenciones y las reglas de calidad
+- Configurar el protocolo de validación para prevenir que Claude genere artefactos sin contexto suficiente
+- Distinguir cuándo Claude actúa como herramienta vs cuándo el humano debe tomar la decisión
+
+### Rúbrica de evaluación
+
+| Nivel | Criterio |
+|-------|----------|
+| **Básico** | Claude Code instalado con los 3 Skills; CLAUDE.md existe en el proyecto |
+| **Competente** | El CLAUDE.md define flujo de trabajo obligatorio, convenciones de scripts y reglas para Claude; Claude las sigue sin desviarse |
+| **Avanzado** | Puedes escribir un CLAUDE.md para un proyecto que no sea el del curso, adaptando las reglas a un stack tecnológico diferente |
+
+---
+
 ### Clase 2-A: ¿Qué es Claude Code y cómo piensa?
+> **Al terminar esta clase podrás:** Explicar el modelo mental de Claude Code (no es un chatbot, es un agente que actúa en tu proyecto) e instalar los Skills del curso.
 
 **Lo que Claude Code NO es:**
 - Un chatbot al que le haces preguntas genéricas
@@ -163,6 +201,7 @@ Skills instalados:
 - `performance-report-analysis` — produce reportes técnico + negocio
 
 ### Clase 2-B: CLAUDE.md — La constitución del proyecto
+> **Al terminar esta clase podrás:** Escribir un CLAUDE.md que defina el objetivo del proyecto, el flujo de trabajo obligatorio y las convenciones de scripts.
 
 El CLAUDE.md es el archivo que Claude Code lee en **cada conversación**. Define:
 - Qué hace este proyecto y cuál es su objetivo
@@ -211,6 +250,7 @@ definida en los tickets JIRA del proyecto DEV antes de cada release.
 **Práctica:** El alumno crea un CLAUDE.md para su proyecto de testing local.
 
 ### Clase 2-C: Prevención de alucinaciones — el contrato de calidad
+> **Al terminar esta clase podrás:** Agregar un protocolo de validación al CLAUDE.md que evite que Claude genere scripts sin los 4 datos mínimos necesarios.
 
 **Problema real:** Claude Code puede generar código que "parece correcto" pero viola los SLAs definidos en JIRA.
 
@@ -231,7 +271,25 @@ Si no puedes responder SÍ a las 4 preguntas, pregunta al usuario antes de conti
 ## Módulo 3 — JIRA como Fuente de la Verdad + MCPs
 **Objetivo:** El alumno usa el MCP de Atlassian para leer tickets JIRA y el MCP de Grafana para consultar métricas, sin salir de Claude Code.
 
+### Competencias del módulo
+Al completar este módulo serás capaz de:
+- Configurar el `.mcp.json` con los MCPs de Atlassian y Grafana
+- Crear un board de JIRA con tickets estructurados usando Claude Code como asistente
+- Leer un ticket JIRA desde Claude Code y extraer SLAs, perfil de carga y criterios de aceptación
+- Ejecutar queries de Prometheus y Loki desde Claude Code sin abrir Grafana manualmente
+
+### Rúbrica de evaluación
+
+| Nivel | Criterio |
+|-------|----------|
+| **Básico** | MCPs configurados; Claude puede leer un ticket JIRA y una métrica de Grafana |
+| **Competente** | Claude crea los 6 tickets del proyecto en JIRA y consulta P95 + error rate de un servicio en un solo prompt |
+| **Avanzado** | Puedes combinar datos de JIRA (qué debería pasar) con datos de Grafana (qué pasó) en una respuesta integrada de Claude |
+
+---
+
 ### Clase 3-A: ¿Qué es un MCP y por qué cambia el juego?
+> **Al terminar esta clase podrás:** Explicar qué es MCP, configurar el `.mcp.json` con los dos MCPs del curso y verificar que Claude puede conectarse a ambos sistemas.
 
 **MCP (Model Context Protocol):** protocolo que permite a Claude Code conectarse a sistemas externos y usar sus APIs como herramientas nativas.
 
@@ -274,6 +332,7 @@ Claude → llama Grafana MCP → consulta PromQL → obtiene P95, error rate →
 ```
 
 ### Clase 3-B: Setup del JIRA personal del alumno
+> **Al terminar esta clase podrás:** Crear tu board JIRA gratuito, generar los 6 tickets del proyecto con Claude Code y leer el primer ticket desde Claude sin abrir el browser.
 
 Cada alumno trabaja con su **propio board de JIRA** usando la capa gratuita de Atlassian.
 Esto replica el flujo real de trabajo: cada tester conecta su proyecto personal a Claude Code.
@@ -347,6 +406,7 @@ PERF-1 #done"
 ```
 
 ### Clase 3-C: MCP Grafana — métricas en tiempo real desde Claude Code
+> **Al terminar esta clase podrás:** Consultar el P95 y error rate de cualquier servicio del lab desde Claude Code, sin abrir Grafana manualmente.
 
 **Capacidades del MCP Grafana:**
 ```
@@ -383,7 +443,25 @@ JIRA MCP (qué debería pasar) + Grafana MCP (qué pasó) → Claude genera el r
 **Skill activado:** `performance-testing-strategy`
 **Objetivo:** El alumno pasa de un ticket JIRA a un plan de testing ejecutable en una sola conversación con Claude Code.
 
+### Competencias del módulo
+Al completar este módulo serás capaz de:
+- Identificar las 4 preguntas que determinan la calidad de cualquier plan de performance testing
+- Generar un plan completo (tipos de prueba, perfiles de carga, secuencia, criterios de aceptación) desde un ticket JIRA
+- Evaluar críticamente el plan generado por Claude e identificar ajustes necesarios
+- Documentar riesgos y dependencias entre servicios antes de ejecutar
+
+### Rúbrica de evaluación
+
+| Nivel | Criterio |
+|-------|----------|
+| **Básico** | Claude genera un plan para el ticket dado con al menos 3 tipos de prueba y su secuencia |
+| **Competente** | El alumno revisa el plan, identifica al menos un ajuste necesario y lo argumenta técnicamente |
+| **Avanzado** | El alumno puede justificar cada decisión del plan (tipo de prueba, VUs, duración) en términos de riesgo de negocio y características del sistema |
+
+---
+
 ### Clase 4-A: Las 4 preguntas que el Skill hace siempre
+> **Al terminar esta clase podrás:** Responder las 4 preguntas de contexto antes de cualquier plan, y entender por qué cada una es obligatoria.
 
 El Skill no genera un plan sin antes recopilar:
 1. **Patrón de tráfico:** ¿pico, steady-state, temporada alta?
@@ -394,6 +472,7 @@ El Skill no genera un plan sin antes recopilar:
 Estas preguntas no son opcionales — son el contrato de calidad del plan.
 
 ### Clase 4-B: Del ticket al plan — flujo completo
+> **Al terminar esta clase podrás:** Generar el plan de testing para DEV-22, cuestionarlo con criterio propio y comentar el plan aprobado directamente en el ticket JIRA.
 
 **Historia que usaremos en este módulo: DEV-22 (Orders)**
 
@@ -441,7 +520,25 @@ El alumno aprende que el plan es un punto de partida, no una orden. **El tester 
 **Skill activado:** `k6-best-practices`
 **Objetivo:** El alumno genera scripts k6 production-ready usando el 5-Block Pattern y entiende cada decisión de diseño.
 
+### Competencias del módulo
+Al completar este módulo serás capaz de:
+- Explicar el propósito de cada uno de los 5 bloques y las consecuencias de omitir alguno
+- Identificar los 10 errores críticos más comunes en scripts k6 antes de ejecutarlos
+- Generar un script completo desde el plan de testing usando el Skill k6-best-practices
+- Ejecutar el script en modo Smoke y Load y correlacionar su salida con Grafana en tiempo real
+
+### Rúbrica de evaluación
+
+| Nivel | Criterio |
+|-------|----------|
+| **Básico** | Script generado que corre sin errores; tiene thresholds y SharedArray |
+| **Competente** | Script sigue el 5-Block Pattern completo; el alumno puede identificar al menos 3 errores en un script de ejemplo antes de ejecutarlo |
+| **Avanzado** | El alumno puede revisar el script de un compañero, detectar todos los errores críticos y argumentar por qué cada uno importa en un test de carga real |
+
+---
+
 ### Clase 5-A: El 5-Block Pattern — por qué este orden importa
+> **Al terminar esta clase podrás:** Leer cualquier script k6 e identificar a qué bloque pertenece cada sección, y qué problema resuelve cada bloque.
 
 Cada script k6 bien construido tiene exactamente estos 5 bloques en este orden:
 
@@ -502,6 +599,7 @@ export function handleSummary(data) {
 ```
 
 ### Clase 5-B: Los 10 errores que el Skill detecta y corrige
+> **Al terminar esta clase podrás:** Auditar un script k6 e identificar los errores críticos antes de que el Skill lo haga por ti — ese es el nivel de criterio que distingue a un QE senior.
 
 | Error | Consecuencia | Corrección |
 |-------|-------------|------------|
@@ -517,6 +615,7 @@ export function handleSummary(data) {
 | Sin correlación de sesión | Cada VU crea usuarios duplicados | Generar sessionId único por VU |
 
 ### Clase 5-C: Generando el script para DEV-22 (Orders)
+> **Al terminar esta clase podrás:** Generar el script completo para el servicio de órdenes y justificar las 3 decisiones de diseño clave del script generado.
 
 **Prompt de ejemplo:**
 ```
@@ -535,6 +634,7 @@ Incluye los 4 escenarios del plan: smoke, baseline, load, stress.
 - ¿Por qué `gracefulStop: '60s'` en el escenario e2e? (requests en curso al hacer ramp-down)
 
 ### Clase 5-D: Ejecutando el script
+> **Al terminar esta clase podrás:** Ejecutar el Smoke Test y el Load Test desde la terminal, y observar la correlación entre los VUs de k6 y los paneles de Grafana en tiempo real.
 
 ```bash
 # Smoke Test (validar que funciona)
@@ -590,12 +690,31 @@ El flujo posterior (Módulos 6, 7, 8) es idéntico independientemente de la herr
 No aprende a crear dashboards — en la industria los dashboards ya existen.
 Lo que el tester necesita saber es **cómo navegarlos y qué le están diciendo**.
 
+### Competencias del módulo
+Al completar este módulo serás capaz de:
+- Verificar el estado del ambiente en menos de 2 minutos antes de ejecutar cualquier test
+- Leer los 4 paneles críticos durante la ejecución e identificar señales de alerta
+- Navegar Tempo para encontrar el span responsable del 80% de la latencia
+- Correlacionar un error en Loki con su traza en Tempo usando el TraceID
+- Formular el prompt de análisis integrado para que Claude diagnostique la causa raíz
+
+### Rúbrica de evaluación
+
+| Nivel | Criterio |
+|-------|----------|
+| **Básico** | Puedes abrir el dashboard RED Metrics, identificar los 4 paneles y detectar si hay error rate > 0 |
+| **Competente** | Puedes navegar Tempo y Loki para encontrar el span culpable y el error más frecuente de un test ejecutado |
+| **Avanzado** | Puedes formular el diagnóstico de causa raíz con evidencia de los 3 sistemas (métricas + trazas + logs) y asociarlo a uno de los 9 patrones del checklist |
+
+---
+
 > **Contexto real:** La mayoría de las empresas ya tienen Grafana con dashboards de sus servicios.
 > Tu trabajo como tester no es construir observabilidad — es saber leerla.
 > Claude Code + MCP Grafana te dan la capacidad de hacer preguntas sobre esos dashboards
 > sin necesidad de saber PromQL o LogQL de memoria.
 
 ### Clase 6-A: El triángulo de observabilidad — la brújula del tester
+> **Al terminar esta clase podrás:** Aplicar el flujo de investigación (métricas → logs → trazas) para cualquier problema detectado durante un test.
 
 ```
         MÉTRICAS (Prometheus → Grafana)
@@ -627,6 +746,7 @@ Con los tres puedes reconstruir exactamente qué pasó durante el pico de carga.
 ```
 
 ### Clase 6-B: Antes del test — validar que el ambiente está sano
+> **Al terminar esta clase podrás:** Completar el pre-flight de 2 minutos en Grafana (o con MCP) antes de cualquier ejecución, y reconocer cuándo el ambiente no está en condiciones para un test.
 
 **No ejecutes el test si el ambiente ya está degradado.**
 Antes de cada ejecución, 2 minutos en Grafana:
@@ -649,6 +769,7 @@ de salud de todos los servicios del e-commerce en Grafana.
 ```
 
 ### Clase 6-C: Durante el test — 4 paneles que importan
+> **Al terminar esta clase podrás:** Monitorear en tiempo real e identificar la señal que indica "detener el test" antes de que consuma tiempo y recursos en datos no útiles.
 
 Abre el dashboard RED Metrics **antes de ejecutar k6** y mantén la vista durante todo el test.
 
@@ -680,6 +801,7 @@ Ctrl + C  →  k6 genera el reporte parcial de todos modos
 ```
 
 ### Clase 6-D: Después del test — navegar Tempo para encontrar el cuello de botella
+> **Al terminar esta clase podrás:** Ejecutar una búsqueda TraceQL en Tempo, leer la cascada de spans e identificar cuál span es el responsable de la latencia alta.
 
 > **Regla del 80/20:** El 80% de la latencia total normalmente viene de un único span.
 > Tu trabajo es encontrar ese span.
@@ -716,6 +838,7 @@ y qué porcentaje del tiempo total representa."
 ```
 
 ### Clase 6-E: Después del test — Loki para investigar errores
+> **Al terminar esta clase podrás:** Buscar errores en Loki con un filtro básico y saltar directamente a la traza del error usando el TraceID en un solo clic.
 
 > **Solo vas a Loki cuando hay errores.**
 > Si el error rate fue 0, Loki no te dice nada útil sobre performance.
@@ -754,6 +877,7 @@ más frecuente y qué traceId tiene?"
 ```
 
 ### Clase 6-F: La combinación ganadora — Claude analiza todo junto
+> **Al terminar esta clase podrás:** Formular el prompt de análisis integrado que le pide a Claude consultar métricas, logs y trazas en paralelo para sintetizar el diagnóstico de causa raíz.
 
 El valor real no está en saber navegar Grafana manualmente —
 está en darle ese contexto a Claude Code para que haga el diagnóstico.
@@ -796,7 +920,25 @@ El tester lee el diagnóstico, valida con su criterio, y decide si acepta la rec
 **Skill activado:** `performance-report-analysis`
 **Objetivo:** Transformar resultados crudos en dos reportes: uno para el equipo técnico, uno para el negocio. Ambos se adjuntan al ticket JIRA.
 
+### Competencias del módulo
+Al completar este módulo serás capaz de:
+- Aplicar el triage de 5 pasos en el orden correcto para no perder tiempo analizando datos irrelevantes
+- Generar el reporte técnico con SLA compliance, findings clasificados por severidad y diagnóstico de causa raíz
+- Generar el reporte de negocio traduciendo métricas a impacto de usuario sin usar jerga técnica
+- Cerrar el ciclo: comentar ambos reportes en JIRA, transicionar el ticket y crear vínculos a bugs encontrados
+
+### Rúbrica de evaluación
+
+| Nivel | Criterio |
+|-------|----------|
+| **Básico** | Reporte técnico generado con tabla de SLA compliance y al menos 2 findings |
+| **Competente** | Reporte de negocio traduce correctamente los resultados a impacto de usuario; la decisión GO/NO-GO/CONDITIONAL GO está justificada; el ticket JIRA está comentado y transicionado |
+| **Avanzado** | Ambos reportes están respaldados por evidencia del stack (TraceID, métrica específica, log entry); el diagnóstico identifica la causa raíz y la solución concreta |
+
+---
+
 ### Clase 7-A: El triage de resultados — orden obligatorio
+> **Al terminar esta clase podrás:** Aplicar los 5 pasos del triage en cualquier resultado de test y detectar en menos de 5 minutos cuál es el problema más crítico.
 
 El Skill siempre analiza en este orden:
 1. **Errores primero** — si error rate > umbral, todo lo demás es ruido
@@ -806,6 +948,7 @@ El Skill siempre analiza en este orden:
 5. **Breakdown por endpoint** — ¿cuál request es el cuello de botella?
 
 ### Clase 7-B: El Reporte Técnico
+> **Al terminar esta clase podrás:** Generar el reporte técnico completo con triage, tabla de SLA compliance, findings con severidad y diagnóstico de causa raíz con evidencia del stack.
 
 **Audiencia:** Desarrolladores, Arquitectos, DevOps, QA Lead
 **Propósito:** Dar evidencia para decidir si el sistema está listo para producción
@@ -849,6 +992,7 @@ Genera el reporte técnico completo con triage, findings y diagnóstico.
 ```
 
 ### Clase 7-C: El Reporte de Negocio
+> **Al terminar esta clase podrás:** Traducir cualquier métrica técnica a impacto de usuario y formular una recomendación ejecutiva GO/NO-GO/CONDITIONAL GO con condiciones claras.
 
 **Audiencia:** Product Manager, CTO, Stakeholders no técnicos
 **Regla de oro:** Cero percentiles, cero jerga técnica. Todo en términos de experiencia de usuario.
@@ -889,6 +1033,7 @@ entre 50-100 usuarios afectados por esperas inaceptables.
 ```
 
 ### Clase 7-D: Cerrar el ciclo — comentar en JIRA con MCP
+> **Al terminar esta clase podrás:** Publicar ambos reportes en JIRA, transicionar el ticket y crear vínculos a bugs usando el MCP de Atlassian — sin abrir el browser.
 
 ```
 "Toma el reporte técnico y el reporte de negocio que generamos
@@ -908,6 +1053,25 @@ createIssueLink("DEV-22", "DEV-22-BUG-01", "is blocked by")
 
 ## Módulo 8 — Proyecto Final: Sprint de Performance Completo
 **Objetivo:** El alumno ejecuta un sprint de performance testing completo, simulando el flujo real de trabajo de un equipo profesional.
+
+### Competencias del módulo
+Al completar este módulo serás capaz de:
+- Ejecutar el ciclo completo sin guía: JIRA → estrategia → scripts → ejecución → observabilidad → reportes → JIRA
+- Integrar todos los Skills y MCPs del curso de forma autónoma en un flujo real de trabajo
+- Tomar la decisión GO/NO-GO/CONDITIONAL GO con evidencia y comunicarla a dos audiencias distintas
+- Demostrar que el criterio técnico es tuyo y que Claude fue tu herramienta, no tu autor
+
+### Rúbrica de evaluación
+
+| Criterio | Peso | Básico | Competente | Avanzado |
+|----------|------|--------|------------|---------|
+| Plan de testing justificado desde los tickets JIRA | 20% | Plan generado sin ajustes | Plan ajustado con al menos 1 decisión propia argumentada | Cada decisión del plan está justificada en términos de riesgo de negocio |
+| Scripts siguen el 5-Block Pattern sin errores críticos | 25% | Script corre sin errores de sintaxis | 5-Block Pattern completo con thresholds correctos | Sin ninguno de los 10 errores del checklist; el alumno puede defender cada línea |
+| Diagnóstico de bottlenecks con evidencia del stack | 25% | Finding identificado con métrica | Finding con evidencia de al menos 2 sistemas | Causa raíz con TraceID + log entry + métrica específica; uno de los 9 patrones nombrado |
+| Reporte de negocio sin jerga técnica con decisión clara | 20% | Reporte sin percentiles | Decisión GO/CONDITIONAL/NO-GO con condición | Estimación de impacto de usuario cuantificada y plan de mitigación |
+| Ciclo JIRA cerrado | 10% | Comentario publicado | Ticket transicionado + comentario | Bugs vinculados + Smart Commits referenciando todos los tickets |
+
+---
 
 ### El Escenario
 
@@ -1054,5 +1218,5 @@ Decisión: GO / NO-GO / CONDITIONAL GO
 
 ---
 
-*Borrador v0.3 — Rodrigo Campos — 2026-04-01*
-*Decisiones incorporadas: k6 primario + Locust/Gatling opcionales, JIRA personal por alumno, observabilidad como navegación*
+*Borrador v0.4 — Rodrigo Campos — 2026-04-01*
+*Cambios: objetivo por clase (una línea), competencias + rúbrica de evaluación por módulo (3 niveles: Básico / Competente / Avanzado)*
