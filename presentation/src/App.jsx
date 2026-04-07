@@ -55,30 +55,30 @@ export default function App() {
     <div className="presentation">
       {/* Logo */}
       <motion.div
-        initial={{ opacity: 0, scale: 0.95 }}
+        initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
-        transition={{ delay: 0.2 }}
+        transition={{ delay: 0.2, type: 'spring', stiffness: 100 }}
         style={{
           position: 'fixed',
-          top: '1.25rem',
+          top: '1rem',
           left: '1.5rem',
           zIndex: 100,
           display: 'flex',
           alignItems: 'center',
-          gap: '0.75rem',
-          background: 'rgba(255,255,255,0.5)',
-          backdropFilter: 'blur(8px)',
-          padding: '0.5rem 1rem',
-          borderRadius: '999px',
-          border: '1px solid rgba(16,185,129,0.1)',
-          boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
+          gap: '1rem',
+          background: 'rgba(255,255,255,0.6)',
+          backdropFilter: 'blur(12px)',
+          padding: '0.75rem 1.5rem',
+          borderRadius: '16px',
+          border: '1px solid rgba(16,185,129,0.15)',
+          boxShadow: '0 8px 24px rgba(0,0,0,0.1)',
         }}
       >
         <img
           src="https://performance360latam.com/images/Perf360LogoBlack.png"
           alt="Performance360"
           style={{
-            height: 42,
+            height: 72,
             objectFit: 'contain',
           }}
         />
