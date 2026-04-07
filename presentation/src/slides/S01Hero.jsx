@@ -16,11 +16,14 @@ export default function S01Hero({ tr }) {
           <span className="badge badge-primary" style={{ marginBottom: '1.5rem' }}>{t.label}</span>
         </motion.div>
 
-        <motion.h1 variants={item} style={{ fontSize: 'clamp(2.5rem, 6vw, 4.5rem)', fontWeight: 900, lineHeight: 1.05, letterSpacing: '-0.03em', marginBottom: '1.5rem' }}>
-          <span className="gradient-text">Claude Code</span>
-          <br />
-          <span style={{ color: 'var(--text)' }}>for Performance Tester</span>
-        </motion.h1>
+        <motion.div variants={item} style={{ marginBottom: '1.5rem' }}>
+          <div style={{ fontSize: 'clamp(2.5rem, 6vw, 4.5rem)', fontWeight: 900, lineHeight: 1.05, letterSpacing: '-0.03em', fontFamily: 'Raleway, var(--font-heading)', marginBottom: '0.5rem' }}>
+            <span style={{ background: 'linear-gradient(90deg, #10b981 0%, #10b981 35%, #f59e0b 35%, #f59e0b 65%, #ef4444 65%, #ef4444 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text', fontWeight: 900 }}>Claude Code</span>
+          </div>
+          <h1 style={{ fontSize: 'clamp(2rem, 5vw, 3.2rem)', fontWeight: 900, lineHeight: 1.1, letterSpacing: '-0.02em', color: 'var(--text)', margin: 0 }}>
+            for Performance Tester
+          </h1>
+        </motion.div>
 
         <motion.p variants={item} style={{ fontSize: 'clamp(1rem, 2vw, 1.2rem)', color: 'var(--muted)', lineHeight: 1.7, maxWidth: 600, margin: '0 auto 2.5rem' }}>
           {t.subtitle.split('\n').map((line, i) => <span key={i}>{line}{i === 0 && <br />}</span>)}
