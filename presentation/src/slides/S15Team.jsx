@@ -20,10 +20,10 @@ export default function S15Team({ tr }) {
           {t.team.map((member, i) => (
             <motion.div key={i} variants={item} className="card" style={{ display: 'flex', flexDirection: 'column', gap: '1rem', padding: '1.5rem', textAlign: 'center', overflow: 'hidden' }} whileHover={{ y: -4 }}>
               {/* Image */}
-              <div style={{ width: '100%', height: 140, borderRadius: 12, overflow: 'hidden', background: 'var(--surface-2)' }}>
-                <img src={member.image} alt={member.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} onError={(e) => {
+              <div style={{ width: '100%', height: 220, borderRadius: 16, overflow: 'hidden', background: 'var(--surface-2)' }}>
+                <img src={member.image} alt={member.name} style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top' }} onError={(e) => {
                   e.target.style.display = 'none'
-                  e.target.parentElement.style.fontSize = '3rem'
+                  e.target.parentElement.style.fontSize = '3.5rem'
                   e.target.parentElement.style.display = 'flex'
                   e.target.parentElement.style.alignItems = 'center'
                   e.target.parentElement.style.justifyContent = 'center'
